@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class Octagon : PowerShapes
 {
@@ -17,6 +18,6 @@ public class Octagon : PowerShapes
         rollSpeed = 300;
         jumpHeight = 10;
         moveSpeed = 20;
-        shapeTangentMode = UnityEngine.U2D.ShapeTangentMode.Continuous;
+        shapeTangentMode = ShapeTangentMode.Continuous;
     }
 }

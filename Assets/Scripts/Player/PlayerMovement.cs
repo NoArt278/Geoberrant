@@ -15,7 +15,9 @@ public class PlayerMovement : MonoBehaviour
     bool justExit;
     Coroutine coyote;
     float rollSpeed = 300, jumpHeight = 10, moveSpeed = 20;
+    const float transformSpeed = 0.05f;
     [SerializeField] List<PowerShapes> powerShapes = new();
+    int currChosenShape;
 
     void Awake()
     {
@@ -30,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         }
         pInput = new PControls();
         isGrounded = true;
+        currChosenShape = 1;
     }
 
     private void OnEnable()
@@ -56,10 +59,11 @@ public class PlayerMovement : MonoBehaviour
     private void ChangeShape(InputAction.CallbackContext ctx)
     {
         int inputVal = Mathf.RoundToInt(ctx.ReadValue<float>());
-        if (inputVal > powerShapes.Count)
+        if (inputVal > powerShapes.Count || currChosenShape == inputVal)
         {
             return;
         }
+        currChosenShape = inputVal;
         PowerShapes chosenShape = powerShapes[inputVal-1];
 
         // Set movement variables value
@@ -73,18 +77,16 @@ public class PlayerMovement : MonoBehaviour
         {
             if (i >= spriteShapeControl.splineDetail)
             {
-                spriteShapeControl.spline.InsertPointAt(i, chosenShape.points[i]);
-            } else
-            {
-                spriteShapeControl.spline.SetPosition(i, chosenShape.points[i]);
+                spriteShapeControl.spline.InsertPointAt(i, Vector2.zero);
             }
+            StartCoroutine(MoveVertex(i, chosenShape.points[i]));
             spriteShapeControl.spline.SetTangentMode(i, chosenShape.shapeTangentMode);
         }
-        if (chosenShape.points.Count < 8)
+        if (chosenShape.points.Count < spriteShapeControl.splineDetail)
         {
-            for (int i = chosenShape.points.Count; i < 8; i++)
+            for (int i = chosenShape.points.Count; i < spriteShapeControl.splineDetail; i++)
             {
-                spriteShapeControl.spline.RemovePointAt(chosenShape.points.Count);
+                StartCoroutine(DeleteVertex(chosenShape.points.Count));
             }
         }
         spriteShapeControl.splineDetail = chosenShape.points.Count;
@@ -95,6 +97,29 @@ public class PlayerMovement : MonoBehaviour
         Vector2 readMoveValue = move.ReadValue<Vector2>();
         rb.velocity = new Vector2(readMoveValue.x * moveSpeed, rb.velocity.y);
         rb.angularVelocity = readMoveValue.x * rollSpeed * -1;
+    }
+    
+    IEnumerator MoveVertex(int idx, Vector2 position)
+    {
+        Vector2 vertexPos = spriteShapeControl.spline.GetPosition(idx);
+        while (!Equals(vertexPos, position))
+        {
+            spriteShapeControl.spline.SetPosition(idx, Vector2.MoveTowards(vertexPos, position, transformSpeed));
+            vertexPos = spriteShapeControl.spline.GetPosition(idx);
+            yield return null;
+        }
+    }
+
+    IEnumerator DeleteVertex(int idx)
+    {
+        Vector2 vertexPos = spriteShapeControl.spline.GetPosition(idx);
+        while (!Equals(vertexPos, Vector2.zero))
+        {
+            spriteShapeControl.spline.SetPosition(idx, Vector2.MoveTowards(vertexPos, Vector2.zero, transformSpeed));
+            vertexPos = spriteShapeControl.spline.GetPosition(idx);
+            yield return null;
+        }
+        spriteShapeControl.spline.RemovePointAt(idx);
     }
 
     IEnumerator CoyoteTime()

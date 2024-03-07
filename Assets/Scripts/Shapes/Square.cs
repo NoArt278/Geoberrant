@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
 public class Square : PowerShapes
 {
@@ -15,6 +16,6 @@ public class Square : PowerShapes
         rollSpeed = 300;
         jumpHeight = 10;
         moveSpeed = 10;
-        shapeTangentMode = UnityEngine.U2D.ShapeTangentMode.Linear;
+        shapeTangentMode = ShapeTangentMode.Linear;
     }
 }

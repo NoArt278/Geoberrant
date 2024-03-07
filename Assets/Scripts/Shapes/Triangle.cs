@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.U2D;
 
-public class Triangle : MonoBehaviour
+public class Triangle : PowerShapes
 {
-    // Start is called before the first frame update
-    void Start()
+    public Triangle()
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        points = new List<Vector2>
+        {
+            new Vector2(0, 1),
+            new Vector2(-1, -1),
+            new Vector2(1, -1),
+            new Vector2(0,0),
+        };
+        mass = 20;
+        rollSpeed = 300;
+        jumpHeight = 10;
+        moveSpeed = 20;
+        shapeTangentMode = ShapeTangentMode.Continuous;
     }
 }
