@@ -42,6 +42,7 @@ public class PlayerMovement : MonoBehaviour
         jumpHeight = startShape.GetJumpHeight();
         moveSpeed = startShape.GetMoveSpeed();
         rb.mass = startShape.GetMass();
+        rb.sharedMaterial.bounciness = startShape.GetBounciness();
 
         // Set collider points
         Vector2[] points = new Vector2[startShape.GetPoints().Count];
@@ -125,6 +126,7 @@ public class PlayerMovement : MonoBehaviour
         rb.mass = chosenShape.GetMass();
         moveSpeed = chosenShape.GetMoveSpeed();
         jumpHeight = chosenShape.GetJumpHeight();
+        rb.sharedMaterial.bounciness = chosenShape.GetBounciness();
 
         transformShape = null;
 

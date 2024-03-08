@@ -1,10 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.U2D;
 
 public class Star : PowerShapes
 {
+    Rigidbody2D rb;
+    float dashSpeed;
     public void Awake()
     {
         SetPoints(new List<Vector2>
@@ -26,5 +29,14 @@ public class Star : PowerShapes
         SetMoveSpeed(30);
         SetScaleOffset(0.5f);
         SetTangentMode(ShapeTangentMode.Linear);
+        rb = GetComponent<Rigidbody2D>();
+        SetBounciness(0);
+        dashSpeed = 100;
+    }
+
+    public override void ActivatePower()
+    {
+        Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
+        rb.AddForce(dir * dashSpeed, ForceMode2D.Impulse);
     }
 }

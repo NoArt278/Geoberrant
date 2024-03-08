@@ -22,6 +22,7 @@ public class Square : PowerShapes
         SetJumpHeight(30);
         SetMoveSpeed(10);
         SetScaleOffset(0.25f);
+        SetBounciness(0);
         SetTangentMode(ShapeTangentMode.Linear);
     }
 
@@ -54,7 +55,7 @@ public class Square : PowerShapes
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.rotation.z < 90)
+        if (collision.collider.CompareTag("Floor"))
         {
             rb.freezeRotation = false;
         }
