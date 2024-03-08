@@ -13,7 +13,7 @@ public class Square : PowerShapes
             new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1)
         });
         SetMass(100);
-        SetRollSpeed(200);
+        SetRollSpeed(150);
         SetJumpHeight(20);
         SetMoveSpeed(10);
         SetScaleOffset(0.25f);

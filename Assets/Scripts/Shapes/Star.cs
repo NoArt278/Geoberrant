@@ -23,7 +23,7 @@ public class Star : PowerShapes
         SetMass(40);
         SetRollSpeed(300);
         SetJumpHeight(20);
-        SetMoveSpeed(20);
+        SetMoveSpeed(30);
         SetScaleOffset(0.5f);
         SetTangentMode(ShapeTangentMode.Linear);
     }

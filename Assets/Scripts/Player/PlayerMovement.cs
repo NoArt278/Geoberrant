@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.U2D;
-using UnityEngine.Windows;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -12,10 +11,11 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     public bool isGrounded;
-    Coroutine transformShape;
+    Coroutine coyote, transformShape;
     float rollSpeed, jumpHeight, moveSpeed;
     const float transformSpeed = 0.05f, playerScale = 2;
-    [SerializeField] List<PowerShapes> powerShapes = new();
+    bool justExit;
+    [SerializeField] List<PowerShapes> powerShapes;
     int currChosenShape;
     PolygonCollider2D polCollider;
 
@@ -26,15 +26,19 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteShapeControl.splineDetail = 8;
         spriteShapeControl.spline.Clear();
+        pInput = new PControls();
+        isGrounded = true;
+        justExit = false;
+        currChosenShape = 1;
+    }
+    private void Start()
+    {
         PowerShapes startShape = powerShapes[0];
         for (int i = 0; i < 8; i++)
         {
             spriteShapeControl.spline.InsertPointAt(i, startShape.GetPoints()[i] * playerScale);
             spriteShapeControl.spline.SetTangentMode(i, ShapeTangentMode.Continuous);
         }
-        pInput = new PControls();
-        isGrounded = true;
-        currChosenShape = 1;
 
         rollSpeed = startShape.GetRollSpeed();
         jumpHeight = startShape.GetJumpHeight();
@@ -159,7 +163,11 @@ public class PlayerMovement : MonoBehaviour
     IEnumerator CoyoteTime()
     {
         yield return new WaitForSeconds(0.2f);
-        isGrounded = false;
+        if (isGrounded)
+        {
+            isGrounded = !justExit;
+        }
+        coyote = null;
     }
 
     private void Jump(InputAction.CallbackContext ctx)
@@ -175,12 +183,17 @@ public class PlayerMovement : MonoBehaviour
     {
         if (collision.transform.rotation.eulerAngles.z < 90)
         {
+            justExit = false;
             isGrounded = true;
         }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        StartCoroutine(CoyoteTime());
+        if (coyote == null)
+        {
+            justExit = true;
+            coyote = StartCoroutine(CoyoteTime());
+        }
     }
 }
