@@ -5,19 +5,19 @@ using UnityEngine.U2D;
 
 public class Octagon : PowerShapes
 {
-    public Octagon() 
+    public void Awake() 
     {
-        points = new List<Vector2>
+        SetPoints(new List<Vector2>
         {
             new Vector2(0, 1), new Vector2(Mathf.Sqrt(0.5f), Mathf.Sqrt(0.5f)),
             new Vector2(1, 0), new Vector2(Mathf.Sqrt(0.5f), -Mathf.Sqrt(0.5f)),
             new Vector2(0, -1), new Vector2(-Mathf.Sqrt(0.5f), -Mathf.Sqrt(0.5f)),
             new Vector2(-1, 0), new Vector2(-Mathf.Sqrt(0.5f), Mathf.Sqrt(0.5f)),
-        };
-        mass = 20;
-        rollSpeed = 300;
-        jumpHeight = 10;
-        moveSpeed = 20;
-        shapeTangentMode = ShapeTangentMode.Continuous;
+        });
+        SetMass(40);
+        SetRollSpeed(300);
+        SetJumpHeight(20);
+        SetMoveSpeed(20);
+        SetTangentMode(ShapeTangentMode.Continuous);
     }
 }

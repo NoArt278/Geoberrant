@@ -12,10 +12,9 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     public bool isGrounded;
-    bool justExit;
-    Coroutine coyote, transformShape;
-    float rollSpeed = 300, jumpHeight = 10, moveSpeed = 20;
-    const float transformSpeed = 0.05f;
+    Coroutine transformShape;
+    float rollSpeed, jumpHeight, moveSpeed;
+    const float transformSpeed = 0.05f, playerScale = 2;
     [SerializeField] List<PowerShapes> powerShapes = new();
     int currChosenShape;
 
@@ -25,14 +24,20 @@ public class PlayerMovement : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteShapeControl.splineDetail = 8;
         spriteShapeControl.spline.Clear();
+        PowerShapes startShape = powerShapes[0];
         for (int i = 0; i < 8; i++)
         {
-            spriteShapeControl.spline.InsertPointAt(i, powerShapes[0].points[i]);
+            spriteShapeControl.spline.InsertPointAt(i, startShape.GetPoints()[i] * playerScale);
             spriteShapeControl.spline.SetTangentMode(i, ShapeTangentMode.Continuous);
         }
         pInput = new PControls();
         isGrounded = true;
         currChosenShape = 1;
+
+        rollSpeed = startShape.GetRollSpeed();
+        jumpHeight = startShape.GetJumpHeight();
+        moveSpeed = startShape.GetMoveSpeed();
+        rb.mass = startShape.GetMass();
     }
 
     private void OnEnable()
@@ -65,38 +70,39 @@ public class PlayerMovement : MonoBehaviour
         }
         currChosenShape = inputVal;
         PowerShapes chosenShape = powerShapes[inputVal-1];
-
-        // Set movement variables value
-        rollSpeed = chosenShape.rollSpeed;
-        rb.mass = chosenShape.mass;
-        moveSpeed = chosenShape.moveSpeed;
-        jumpHeight = chosenShape.jumpHeight;
-
         transformShape = StartCoroutine(TransformShape(chosenShape));
     }
 
     IEnumerator TransformShape(PowerShapes chosenShape)
     {
+        List<Vector2> shapePoints = chosenShape.GetPoints();
         // Move vertices
-        for (int i = 0; i < chosenShape.points.Count; i++)
+        for (int i = 0; i < shapePoints.Count; i++)
         {
             if (i >= spriteShapeControl.splineDetail)
             {
                 spriteShapeControl.spline.InsertPointAt(i, Vector2.zero);
             }
-            StartCoroutine(MoveVertex(i, chosenShape.points[i]));
-            spriteShapeControl.spline.SetTangentMode(i, chosenShape.shapeTangentMode);
+            StartCoroutine(MoveVertex(i, shapePoints[i] * playerScale));
+            spriteShapeControl.spline.SetTangentMode(i, chosenShape.GetTangentMode());
             yield return new WaitForSeconds(0.1f);
         }
-        if (chosenShape.points.Count < spriteShapeControl.splineDetail)
+        if (shapePoints.Count < spriteShapeControl.splineDetail)
         {
-            for (int i = chosenShape.points.Count; i < spriteShapeControl.splineDetail; i++)
+            for (int i = shapePoints.Count; i < spriteShapeControl.splineDetail; i++)
             {
-                StartCoroutine(DeleteVertex(chosenShape.points.Count));
+                StartCoroutine(DeleteVertex(shapePoints.Count));
                 yield return new WaitForSeconds(0.1f);
             }
         }
-        spriteShapeControl.splineDetail = chosenShape.points.Count;
+        spriteShapeControl.splineDetail = shapePoints.Count;
+
+        // Set movement variables value
+        rollSpeed = chosenShape.GetRollSpeed();
+        rb.mass = chosenShape.GetMass();
+        moveSpeed = chosenShape.GetMoveSpeed();
+        jumpHeight = chosenShape.GetJumpHeight();
+
         transformShape = null;
     }
 
@@ -132,11 +138,8 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator CoyoteTime()
     {
-        yield return new WaitForSeconds(0.5f);
-        if (justExit)
-        {
-            isGrounded = false;
-        }
+        yield return new WaitForSeconds(0.2f);
+        isGrounded = false;
     }
 
     private void Jump(InputAction.CallbackContext ctx)
@@ -144,21 +147,17 @@ public class PlayerMovement : MonoBehaviour
         if (isGrounded)
         {
             rb.velocity += new Vector2(0, jumpHeight);
+            isGrounded = false;
         }
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        justExit = false;
         isGrounded = true;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        justExit = true;
-        if (coyote == null)
-        {
-            coyote = StartCoroutine(CoyoteTime());
-        }
+        StartCoroutine(CoyoteTime());
     }
 }

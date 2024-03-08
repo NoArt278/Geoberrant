@@ -5,19 +5,18 @@ using UnityEngine.U2D;
 
 public class Triangle : PowerShapes
 {
-    public Triangle()
+    public void Awake()
     {
-        points = new List<Vector2>
+        SetPoints(new List<Vector2>
         {
-            new Vector2(0, 1),
-            new Vector2(-1, -1),
-            new Vector2(1, -1),
-            new Vector2(0,0),
-        };
-        mass = 20;
-        rollSpeed = 300;
-        jumpHeight = 10;
-        moveSpeed = 20;
-        shapeTangentMode = ShapeTangentMode.Continuous;
+            new Vector2(0, 0.5f),
+            new Vector2(-0.5f, -0.5f),
+            new Vector2(0.5f, -0.5f),
+        });
+        SetMass(20);
+        SetRollSpeed(300);
+        SetJumpHeight(10);
+        SetMoveSpeed(20);
+        SetTangentMode(ShapeTangentMode.Linear);
     }
 }
