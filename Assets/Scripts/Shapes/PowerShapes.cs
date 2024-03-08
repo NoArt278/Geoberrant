@@ -6,7 +6,7 @@ using UnityEngine.U2D;
 public class PowerShapes : MonoBehaviour
 {
     [HideInInspector] List<Vector2> points;
-    [HideInInspector] float mass, rollSpeed, jumpHeight, moveSpeed;
+    [HideInInspector] float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset;
     [HideInInspector] ShapeTangentMode shapeTangentMode;
 
     // Setters
@@ -29,6 +29,10 @@ public class PowerShapes : MonoBehaviour
     public void SetMoveSpeed(float moveSpeed)
     {
         this.moveSpeed = moveSpeed;
+    }
+    public void SetScaleOffset(float scaleOffset)
+    {
+        this.scaleOffset = scaleOffset;
     }
     public void SetTangentMode(ShapeTangentMode shapeTangentMode)
     {
@@ -55,6 +59,10 @@ public class PowerShapes : MonoBehaviour
     public float GetMoveSpeed()
     {
         return this.moveSpeed;
+    }
+    public float GetScaleOffset()
+    {
+        return this.scaleOffset;
     }
     public ShapeTangentMode GetTangentMode()
     {

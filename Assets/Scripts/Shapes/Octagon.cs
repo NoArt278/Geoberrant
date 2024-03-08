@@ -18,6 +18,7 @@ public class Octagon : PowerShapes
         SetRollSpeed(300);
         SetJumpHeight(20);
         SetMoveSpeed(20);
+        SetScaleOffset(0.25f);
         SetTangentMode(ShapeTangentMode.Continuous);
     }
 }

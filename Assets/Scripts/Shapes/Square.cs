@@ -16,6 +16,7 @@ public class Square : PowerShapes
         SetRollSpeed(200);
         SetJumpHeight(20);
         SetMoveSpeed(10);
+        SetScaleOffset(0.25f);
         SetTangentMode(ShapeTangentMode.Linear);
     }
 }

@@ -15,8 +15,9 @@ public class Triangle : PowerShapes
         });
         SetMass(20);
         SetRollSpeed(300);
-        SetJumpHeight(10);
+        SetJumpHeight(40);
         SetMoveSpeed(20);
+        SetScaleOffset(0.4f);
         SetTangentMode(ShapeTangentMode.Linear);
     }
 }

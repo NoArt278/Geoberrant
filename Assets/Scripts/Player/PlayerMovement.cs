@@ -17,10 +17,12 @@ public class PlayerMovement : MonoBehaviour
     const float transformSpeed = 0.05f, playerScale = 2;
     [SerializeField] List<PowerShapes> powerShapes = new();
     int currChosenShape;
+    PolygonCollider2D polCollider;
 
     void Awake()
     {
         spriteShapeControl = GetComponent<SpriteShapeController>();
+        polCollider = GetComponent<PolygonCollider2D>();
         rb = GetComponent<Rigidbody2D>();
         spriteShapeControl.splineDetail = 8;
         spriteShapeControl.spline.Clear();
@@ -38,6 +40,15 @@ public class PlayerMovement : MonoBehaviour
         jumpHeight = startShape.GetJumpHeight();
         moveSpeed = startShape.GetMoveSpeed();
         rb.mass = startShape.GetMass();
+
+        // Set collider points
+        Vector2[] points = new Vector2[startShape.GetPoints().Count];
+        for (int i = 0; i < startShape.GetPoints().Count; i++)
+        {
+            points[i] = startShape.GetPoints()[i] * (playerScale + startShape.GetScaleOffset());
+        }
+        polCollider.points = points;
+        polCollider.SetPath(0, points);
     }
 
     private void OnEnable()
@@ -104,6 +115,15 @@ public class PlayerMovement : MonoBehaviour
         jumpHeight = chosenShape.GetJumpHeight();
 
         transformShape = null;
+
+        // Set collider points
+        Vector2[] points = new Vector2[chosenShape.GetPoints().Count];
+        for (int i = 0; i < chosenShape.GetPoints().Count; i++)
+        {
+            points[i] = chosenShape.GetPoints()[i] * (playerScale + chosenShape.GetScaleOffset());
+        }
+        polCollider.points = points;
+        polCollider.SetPath(0, points);
     }
 
     void FixedUpdate()
@@ -153,7 +173,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        isGrounded = true;
+        if (collision.transform.rotation.eulerAngles.z < 90)
+        {
+            isGrounded = true;
+        }
     }
 
     private void OnCollisionExit2D(Collision2D collision)
