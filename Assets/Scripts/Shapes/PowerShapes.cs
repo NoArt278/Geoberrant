@@ -68,4 +68,6 @@ public class PowerShapes : MonoBehaviour
     {
         return this.shapeTangentMode;
     }
+
+    public virtual void ActivatePower() { }
 }

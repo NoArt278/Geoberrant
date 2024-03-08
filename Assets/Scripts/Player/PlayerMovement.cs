@@ -7,7 +7,7 @@ using UnityEngine.U2D;
 public class PlayerMovement : MonoBehaviour
 {
     PControls pInput;
-    InputAction move, jump, power;
+    InputAction move, jump, power, trigger;
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     Coroutine transformShape;
@@ -58,20 +58,30 @@ public class PlayerMovement : MonoBehaviour
         move = pInput.Player.Move;
         jump = pInput.Player.Jump;
         power = pInput.Player.Powers;
+        trigger = pInput.Player.Fire;
         jump.performed += Jump;
         power.performed += ChangeShape;
+        trigger.performed += TriggerPower;
         move.Enable();
         jump.Enable();
         power.Enable();
+        trigger.Enable();
     }
 
     private void OnDisable()
     {
         jump.performed -= Jump;
         power.performed -= ChangeShape;
+        trigger.performed -= TriggerPower;
         move.Disable();
         jump.Disable();
         power.Disable();
+        trigger.Disable();
+    }
+
+    private void TriggerPower(InputAction.CallbackContext ctx)
+    {
+        powerShapes[currChosenShape-1].ActivatePower();
     }
 
     private void ChangeShape(InputAction.CallbackContext ctx)
@@ -131,8 +141,18 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 readMoveValue = move.ReadValue<Vector2>();
-        rb.velocity = new Vector2(readMoveValue.x * moveSpeed, rb.velocity.y);
-        rb.angularVelocity = readMoveValue.x * rollSpeed * -1;
+        float xSpeed = readMoveValue.x * moveSpeed;
+        if (Mathf.Abs(xSpeed) < rb.velocity.x)
+        {
+            xSpeed = rb.velocity.x;
+        }
+        float nextRollSpeed = readMoveValue.x * rollSpeed * -1;
+        if (Mathf.Abs(nextRollSpeed) < rb.angularVelocity)
+        {
+            nextRollSpeed = rb.angularVelocity;
+        }
+        rb.velocity = new Vector2(xSpeed, rb.velocity.y);
+        rb.angularVelocity = nextRollSpeed;
     }
     
     IEnumerator MoveVertex(int idx, Vector2 position)

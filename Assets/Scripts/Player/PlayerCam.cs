@@ -9,7 +9,11 @@ public class PlayerCam : MonoBehaviour
     const float minYPos = 0;
     void Update()
     {
-        float camY = player.transform.position.y + 2;
+        float camY = Mathf.Lerp(transform.position.y, player.transform.position.y + 2, 10*Time.deltaTime);
+        if (player.transform.position.y < 10)
+        {
+            camY = Mathf.Lerp(transform.position.y, 4, 10*Time.deltaTime);
+        }
         camY = Mathf.Clamp(camY, minYPos, Mathf.Infinity);
         transform.position = new Vector3(player.transform.position.x + 3, camY, transform.position.z);
     }
