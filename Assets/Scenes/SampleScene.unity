@@ -290,7 +290,7 @@ MonoBehaviour:
   m_AdaptiveUV: 0
   m_StretchUV: 0
   m_WorldSpaceUV: 0
-  m_CornerAngleThreshold: 60
+  m_CornerAngleThreshold: 65
   m_ColliderDetail: 16
   m_ColliderOffset: 0.5
   m_UpdateCollider: 1
@@ -415,6 +415,7 @@ MonoBehaviour:
   - {fileID: 1049520572}
   - {fileID: 1429133252}
   - {fileID: 782660850}
+  - {fileID: 1113622435}
 --- !u!60 &79843046
 PolygonCollider2D:
   m_ObjectHideFlags: 0
