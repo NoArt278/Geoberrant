@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.U2D;
 
 public class Square : PowerShapes
@@ -8,7 +9,7 @@ public class Square : PowerShapes
     Rigidbody2D rb;
     bool isGrounded;
     Coroutine power;
-    const float powerJumpHeight = 60f, powerJumpRange = 20f;
+    const float powerJumpHeight = 60f, powerJumpRange = 30f;
     public void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -37,7 +38,8 @@ public class Square : PowerShapes
     IEnumerator Slam()
     {
         StartCoroutine(StraightenRotation());
-        rb.velocity += new Vector2(powerJumpRange * Mathf.Sign(rb.velocity.x), powerJumpHeight);
+        Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
+        rb.velocity += new Vector2(powerJumpRange * Mathf.Sign(dir.x), powerJumpHeight);
         yield return new WaitForSeconds(1f);
         rb.velocity += new Vector2(0, -powerJumpHeight * 2);
         power = null;

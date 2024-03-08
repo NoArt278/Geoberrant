@@ -30,13 +30,14 @@ public class Star : PowerShapes
         SetScaleOffset(0.5f);
         SetTangentMode(ShapeTangentMode.Linear);
         rb = GetComponent<Rigidbody2D>();
-        SetBounciness(0);
-        dashSpeed = 100;
+        SetBounciness(1);
+        dashSpeed = 10;
     }
 
     public override void ActivatePower()
     {
         Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
-        rb.AddForce(dir * dashSpeed, ForceMode2D.Impulse);
+        rb.velocity = dir * dashSpeed;
+        Debug.Log(rb.velocity.x);
     }
 }

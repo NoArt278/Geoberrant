@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     InputAction move, jump, power, trigger;
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
-    Coroutine transformShape;
+    Coroutine transformShape, triggerPower;
     float rollSpeed, jumpHeight, moveSpeed;
     const float transformSpeed = 0.05f, playerScale = 2;
     bool jumpAvailable;
@@ -82,7 +82,17 @@ public class PlayerMovement : MonoBehaviour
 
     private void TriggerPower(InputAction.CallbackContext ctx)
     {
-        powerShapes[currChosenShape-1].ActivatePower();
+        if (triggerPower == null)
+        {
+            triggerPower = StartCoroutine(StartPower());
+        }
+    }
+
+    IEnumerator StartPower()
+    {
+        powerShapes[currChosenShape - 1].ActivatePower();
+        yield return new WaitForSeconds(1.5f);
+        triggerPower = null;
     }
 
     private void ChangeShape(InputAction.CallbackContext ctx)
@@ -144,12 +154,12 @@ public class PlayerMovement : MonoBehaviour
     {
         Vector2 readMoveValue = move.ReadValue<Vector2>();
         float xSpeed = readMoveValue.x * moveSpeed;
-        if (Mathf.Abs(xSpeed) < rb.velocity.x)
+        if (Mathf.Abs(xSpeed) < Mathf.Abs(rb.velocity.x))
         {
             xSpeed = rb.velocity.x;
         }
         float nextRollSpeed = readMoveValue.x * rollSpeed * -1;
-        if (Mathf.Abs(nextRollSpeed) < rb.angularVelocity)
+        if (Mathf.Abs(nextRollSpeed) < Mathf.Abs(rb.angularVelocity))
         {
             nextRollSpeed = rb.angularVelocity;
         }
