@@ -13,7 +13,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     public bool isGrounded;
     bool justExit;
-    Coroutine coyote;
+    Coroutine coyote, transformShape;
     float rollSpeed = 300, jumpHeight = 10, moveSpeed = 20;
     const float transformSpeed = 0.05f;
     [SerializeField] List<PowerShapes> powerShapes = new();
@@ -59,7 +59,7 @@ public class PlayerMovement : MonoBehaviour
     private void ChangeShape(InputAction.CallbackContext ctx)
     {
         int inputVal = Mathf.RoundToInt(ctx.ReadValue<float>());
-        if (inputVal > powerShapes.Count || currChosenShape == inputVal)
+        if (inputVal > powerShapes.Count || currChosenShape == inputVal || transformShape != null)
         {
             return;
         }
@@ -71,7 +71,12 @@ public class PlayerMovement : MonoBehaviour
         rb.mass = chosenShape.mass;
         moveSpeed = chosenShape.moveSpeed;
         jumpHeight = chosenShape.jumpHeight;
-        
+
+        transformShape = StartCoroutine(TransformShape(chosenShape));
+    }
+
+    IEnumerator TransformShape(PowerShapes chosenShape)
+    {
         // Move vertices
         for (int i = 0; i < chosenShape.points.Count; i++)
         {
@@ -81,15 +86,18 @@ public class PlayerMovement : MonoBehaviour
             }
             StartCoroutine(MoveVertex(i, chosenShape.points[i]));
             spriteShapeControl.spline.SetTangentMode(i, chosenShape.shapeTangentMode);
+            yield return new WaitForSeconds(0.1f);
         }
         if (chosenShape.points.Count < spriteShapeControl.splineDetail)
         {
             for (int i = chosenShape.points.Count; i < spriteShapeControl.splineDetail; i++)
             {
                 StartCoroutine(DeleteVertex(chosenShape.points.Count));
+                yield return new WaitForSeconds(0.1f);
             }
         }
         spriteShapeControl.splineDetail = chosenShape.points.Count;
+        transformShape = null;
     }
 
     void FixedUpdate()
