@@ -10,11 +10,10 @@ public class PlayerMovement : MonoBehaviour
     InputAction move, jump, power;
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
-    public bool isGrounded;
-    Coroutine coyote, transformShape;
+    Coroutine transformShape;
     float rollSpeed, jumpHeight, moveSpeed;
     const float transformSpeed = 0.05f, playerScale = 2;
-    bool justExit;
+    bool jumpAvailable;
     [SerializeField] List<PowerShapes> powerShapes;
     int currChosenShape;
     PolygonCollider2D polCollider;
@@ -27,8 +26,7 @@ public class PlayerMovement : MonoBehaviour
         spriteShapeControl.splineDetail = 8;
         spriteShapeControl.spline.Clear();
         pInput = new PControls();
-        isGrounded = true;
-        justExit = false;
+        jumpAvailable = true;
         currChosenShape = 1;
     }
     private void Start()
@@ -160,40 +158,20 @@ public class PlayerMovement : MonoBehaviour
         spriteShapeControl.spline.RemovePointAt(idx);
     }
 
-    IEnumerator CoyoteTime()
-    {
-        yield return new WaitForSeconds(0.2f);
-        if (isGrounded)
-        {
-            isGrounded = !justExit;
-        }
-        coyote = null;
-    }
-
     private void Jump(InputAction.CallbackContext ctx)
     {
-        if (isGrounded)
+        if (jumpAvailable)
         {
             rb.velocity += new Vector2(0, jumpHeight);
-            isGrounded = false;
+            jumpAvailable = false;
         }
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.rotation.eulerAngles.z < 90)
         {
-            justExit = false;
-            isGrounded = true;
-        }
-    }
-
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (coyote == null)
-        {
-            justExit = true;
-            coyote = StartCoroutine(CoyoteTime());
+            jumpAvailable = true;
         }
     }
 }
