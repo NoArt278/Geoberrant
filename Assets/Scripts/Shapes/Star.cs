@@ -32,6 +32,7 @@ public class Star : PowerShapes
         rb = GetComponent<Rigidbody2D>();
         SetBounciness(0.6f);
         dashSpeed = 10;
+        SetColor(Color.yellow);
     }
 
     public override void ActivatePower()

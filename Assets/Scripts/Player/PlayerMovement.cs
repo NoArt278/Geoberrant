@@ -12,11 +12,14 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D rb;
     Coroutine transformShape, triggerPower;
     float rollSpeed, jumpHeight, moveSpeed;
-    const float transformSpeed = 0.05f, playerScale = 2;
+    const float transformSpeed = 0.05f, playerScale = 2, powerCooldown=1.5f;
     bool jumpAvailable;
     [SerializeField] List<PowerShapes> powerShapes;
     int currChosenShape;
     PolygonCollider2D polCollider;
+    Gradient colorGradient;
+    GradientColorKey[] colorKey;
+    GradientAlphaKey[] alphaKey;
 
     void Awake()
     {
@@ -28,6 +31,9 @@ public class PlayerMovement : MonoBehaviour
         pInput = new PControls();
         jumpAvailable = true;
         currChosenShape = 1;
+        colorGradient = new Gradient();
+        colorKey = new GradientColorKey[2];
+        alphaKey = new GradientAlphaKey[2];
     }
     private void Start()
     {
@@ -52,6 +58,17 @@ public class PlayerMovement : MonoBehaviour
         }
         polCollider.points = points;
         polCollider.SetPath(0, points);
+
+        // Blend color from red at 0% to blue at 100%
+        colorKey[0] = new GradientColorKey(Color.white, 0.0f);
+        colorKey[1] = new GradientColorKey(startShape.GetColor(), 1.0f);
+
+        // Blend alpha from opaque at 0% to transparent at 100%
+        alphaKey[0] = new GradientAlphaKey(1.0f, 0.0f);
+        alphaKey[1] = new GradientAlphaKey(1.0f, 1.0f);
+
+        colorGradient.SetKeys(colorKey, alphaKey);
+        spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(1f);
     }
 
     private void OnEnable()
@@ -88,10 +105,23 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
+    IEnumerator StartGradient()
+    {
+        float startTime = Time.time;
+        float currInterval = Time.time - startTime;
+        while (currInterval < powerCooldown)
+        {
+            spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(currInterval / powerCooldown);
+            currInterval = Time.time - startTime;
+            yield return null;
+        }
+    }
+
     IEnumerator StartPower()
     {
         powerShapes[currChosenShape - 1].ActivatePower();
-        yield return new WaitForSeconds(1.5f);
+        StartCoroutine(StartGradient());
+        yield return new WaitForSeconds(powerCooldown);
         triggerPower = null;
     }
 
@@ -104,6 +134,10 @@ public class PlayerMovement : MonoBehaviour
         }
         currChosenShape = inputVal;
         PowerShapes chosenShape = powerShapes[inputVal-1];
+        colorKey[0] = new GradientColorKey(colorKey[1].color, 0.0f); ;
+        colorKey[1] = new GradientColorKey(chosenShape.GetColor(), 1.0f);
+        colorGradient.SetKeys(colorKey, alphaKey);
+        StartCoroutine(StartGradient());
         transformShape = StartCoroutine(TransformShape(chosenShape));
     }
 
@@ -148,6 +182,10 @@ public class PlayerMovement : MonoBehaviour
         }
         polCollider.points = points;
         polCollider.SetPath(0, points);
+
+        colorKey[0] = new GradientColorKey(Color.white, 0.0f); ;
+        colorKey[1] = new GradientColorKey(chosenShape.GetColor(), 1.0f);
+        colorGradient.SetKeys(colorKey, alphaKey);
     }
 
     void FixedUpdate()

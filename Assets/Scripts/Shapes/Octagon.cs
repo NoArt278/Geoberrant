@@ -21,5 +21,6 @@ public class Octagon : PowerShapes
         SetScaleOffset(0.25f);
         SetBounciness(0);
         SetTangentMode(ShapeTangentMode.Continuous);
+        SetColor(Color.white);
     }
 }

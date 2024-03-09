@@ -24,6 +24,7 @@ public class Square : PowerShapes
         SetScaleOffset(0.25f);
         SetBounciness(0);
         SetTangentMode(ShapeTangentMode.Linear);
+        SetColor(Color.gray);
     }
 
     public override void ActivatePower()

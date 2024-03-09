@@ -8,6 +8,7 @@ public class PowerShapes : MonoBehaviour
     List<Vector2> points;
     float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset, bounciness;
     ShapeTangentMode shapeTangentMode;
+    Color color;
 
     // Setters
     public void SetPoints(List<Vector2> points)
@@ -42,6 +43,10 @@ public class PowerShapes : MonoBehaviour
     {
         this.shapeTangentMode = shapeTangentMode;
     }
+    public void SetColor(Color color)
+    {
+        this.color = color;
+    }
 
     // Getters
     public List<Vector2> GetPoints()
@@ -75,6 +80,10 @@ public class PowerShapes : MonoBehaviour
     public ShapeTangentMode GetTangentMode()
     {
         return this.shapeTangentMode;
+    }
+    public Color GetColor()
+    { 
+        return this.color; 
     }
 
     public virtual void ActivatePower() { }
