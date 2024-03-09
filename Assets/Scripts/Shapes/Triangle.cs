@@ -9,8 +9,8 @@ public class Triangle : PowerShapes
     {
         SetPoints(new List<Vector2>
         {
-            new Vector2(0, Mathf.Sqrt(3)),
             new Vector2(-1f,0),
+            new Vector2(0, Mathf.Sqrt(3)),
             new Vector2(1f, 0),
         });
         SetMass(20);
