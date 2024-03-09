@@ -30,7 +30,7 @@ public class Star : PowerShapes
         SetScaleOffset(0.5f);
         SetTangentMode(ShapeTangentMode.Linear);
         rb = GetComponent<Rigidbody2D>();
-        SetBounciness(1);
+        SetBounciness(0.6f);
         dashSpeed = 10;
     }
 
@@ -38,6 +38,5 @@ public class Star : PowerShapes
     {
         Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
         rb.velocity = dir * dashSpeed;
-        Debug.Log(rb.velocity.x);
     }
 }

@@ -5,9 +5,9 @@ using UnityEngine.U2D;
 
 public class PowerShapes : MonoBehaviour
 {
-    [HideInInspector] List<Vector2> points;
-    [HideInInspector] float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset, bounciness;
-    [HideInInspector] ShapeTangentMode shapeTangentMode;
+    List<Vector2> points;
+    float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset, bounciness;
+    ShapeTangentMode shapeTangentMode;
 
     // Setters
     public void SetPoints(List<Vector2> points)

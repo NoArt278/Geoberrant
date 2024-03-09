@@ -7,7 +7,6 @@ using UnityEngine.U2D;
 public class Square : PowerShapes
 {
     Rigidbody2D rb;
-    bool isGrounded;
     Coroutine power;
     const float powerJumpHeight = 60f, powerJumpRange = 30f;
     public void Awake()
