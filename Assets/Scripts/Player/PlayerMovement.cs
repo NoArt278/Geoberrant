@@ -190,19 +190,12 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
-        Vector2 readMoveValue = move.ReadValue<Vector2>();
-        float xSpeed = readMoveValue.x * moveSpeed;
-        if (Mathf.Abs(xSpeed) < Mathf.Abs(rb.velocity.x))
+        if (triggerPower == null) // Can't move if activate power
         {
-            xSpeed = rb.velocity.x;
+            Vector2 readMoveValue = move.ReadValue<Vector2>();
+            rb.velocity = new Vector2(readMoveValue.x * moveSpeed, rb.velocity.y);
+            rb.angularVelocity = readMoveValue.x * rollSpeed * -1;
         }
-        float nextRollSpeed = readMoveValue.x * rollSpeed * -1;
-        if (Mathf.Abs(nextRollSpeed) < Mathf.Abs(rb.angularVelocity))
-        {
-            nextRollSpeed = rb.angularVelocity;
-        }
-        rb.velocity = new Vector2(xSpeed, rb.velocity.y);
-        rb.angularVelocity = nextRollSpeed;
     }
     
     IEnumerator MoveVertex(int idx, Vector2 position)
