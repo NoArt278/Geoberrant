@@ -99,7 +99,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void TriggerPower(InputAction.CallbackContext ctx)
     {
-        if (triggerPower == null)
+        if (triggerPower == null && transformShape == null)
         {
             triggerPower = StartCoroutine(StartPower());
         }
