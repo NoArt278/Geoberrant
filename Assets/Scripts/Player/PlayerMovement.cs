@@ -59,11 +59,9 @@ public class PlayerMovement : MonoBehaviour
         polCollider.points = points;
         polCollider.SetPath(0, points);
 
-        // Blend color from red at 0% to blue at 100%
         colorKey[0] = new GradientColorKey(Color.white, 0.0f);
         colorKey[1] = new GradientColorKey(startShape.GetColor(), 1.0f);
 
-        // Blend alpha from opaque at 0% to transparent at 100%
         alphaKey[0] = new GradientAlphaKey(1.0f, 0.0f);
         alphaKey[1] = new GradientAlphaKey(1.0f, 1.0f);
 
@@ -99,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void TriggerPower(InputAction.CallbackContext ctx)
     {
-        if (triggerPower == null && transformShape == null)
+        if (triggerPower == null && transformShape == null && currChosenShape > 1)
         {
             triggerPower = StartCoroutine(StartPower());
         }
@@ -170,6 +168,7 @@ public class PlayerMovement : MonoBehaviour
         rb.mass = chosenShape.GetMass();
         moveSpeed = chosenShape.GetMoveSpeed();
         jumpHeight = chosenShape.GetJumpHeight();
+        rb.gravityScale = chosenShape.GetGravScale();
         rb.sharedMaterial.bounciness = chosenShape.GetBounciness();
 
         transformShape = null;
@@ -186,13 +185,23 @@ public class PlayerMovement : MonoBehaviour
         colorKey[0] = new GradientColorKey(Color.white, 0.0f); ;
         colorKey[1] = new GradientColorKey(chosenShape.GetColor(), 1.0f);
         colorGradient.SetKeys(colorKey, alphaKey);
+
+        if(chosenShape.GetType().ToString() == "Triangle")
+        {
+            Triangle triangle = (Triangle) chosenShape;
+            triangle.ActivateLaser();
+        } else
+        {
+            Triangle triangle = (Triangle)powerShapes[2];
+            triangle.DeactivateLaser();
+        }
     }
 
     void FixedUpdate()
     {
-        if (triggerPower == null) // Can't move if activate power
+        Vector2 readMoveValue = move.ReadValue<Vector2>();
+        if (readMoveValue.x != 0 && triggerPower == null) // Can't move normally if power is active
         {
-            Vector2 readMoveValue = move.ReadValue<Vector2>();
             rb.velocity = new Vector2(readMoveValue.x * moveSpeed, rb.velocity.y);
             rb.angularVelocity = readMoveValue.x * rollSpeed * -1;
         }

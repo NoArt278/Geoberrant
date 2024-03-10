@@ -6,7 +6,7 @@ using UnityEngine.U2D;
 public class PowerShapes : MonoBehaviour
 {
     List<Vector2> points;
-    float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset, bounciness;
+    float mass, rollSpeed, jumpHeight, moveSpeed, scaleOffset, bounciness, gravityScale;
     ShapeTangentMode shapeTangentMode;
     Color color;
 
@@ -38,6 +38,10 @@ public class PowerShapes : MonoBehaviour
     public void SetBounciness(float bounciness)
     {
         this.bounciness = bounciness;
+    }
+    public void SetGravScale(float gravityScale)
+    {
+        this.gravityScale = gravityScale;
     }
     public void SetTangentMode(ShapeTangentMode shapeTangentMode)
     {
@@ -76,6 +80,10 @@ public class PowerShapes : MonoBehaviour
     public float GetBounciness()
     {
         return this.bounciness;
+    }
+    public float GetGravScale()
+    {
+        return this.gravityScale;
     }
     public ShapeTangentMode GetTangentMode()
     {

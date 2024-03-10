@@ -17,10 +17,11 @@ public class Octagon : PowerShapes
         SetMass(40);
         SetRollSpeed(300);
         SetJumpHeight(20);
-        SetMoveSpeed(20);
+        SetMoveSpeed(25);
         SetScaleOffset(0.25f);
         SetBounciness(0);
         SetTangentMode(ShapeTangentMode.Continuous);
+        SetGravScale(3);
         SetColor(Color.white);
     }
 }

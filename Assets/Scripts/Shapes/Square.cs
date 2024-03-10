@@ -18,11 +18,12 @@ public class Square : PowerShapes
             new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1)
         });
         SetMass(100);
-        SetRollSpeed(150);
+        SetRollSpeed(200);
         SetJumpHeight(30);
-        SetMoveSpeed(10);
+        SetMoveSpeed(15);
         SetScaleOffset(0.25f);
         SetBounciness(0);
+        SetGravScale(3);
         SetTangentMode(ShapeTangentMode.Linear);
         SetColor(Color.gray);
     }
@@ -40,7 +41,7 @@ public class Square : PowerShapes
         StartCoroutine(StraightenRotation());
         Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
         rb.velocity += new Vector2(powerJumpRange * Mathf.Sign(dir.x), powerJumpHeight);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(1.3f);
         rb.velocity += new Vector2(0, -powerJumpHeight * 2);
         power = null;
     }
