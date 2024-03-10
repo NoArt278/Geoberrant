@@ -7,7 +7,7 @@ using UnityEngine.U2D;
 public class Triangle : PowerShapes
 {
     Rigidbody2D rb;
-    const float initialLaserWidth = 0.1f, firedLaserWidth = 1f, laserFireTime = 0.8f, laserDist = 50f, recoil = 50f;
+    const float initialLaserWidth = 0.1f, firedLaserWidth = 1f, laserFireTime = 0.8f, laserDist = 100f, recoil = 50f;
     Gradient laserGradient;
     [SerializeField] GameObject laser;
     List<GameObject> lasers;
@@ -119,7 +119,7 @@ public class Triangle : PowerShapes
         giantLaserLine.startWidth = firedLaserWidth;
         giantLaserLine.endWidth = firedLaserWidth;
         giantLaserLine.SetPosition(0, mousePos);
-        giantLaserLine.SetPosition(1, mousePos + (mousePos - new Vector2(transform.position.x, transform.position.y)) * laserDist);
+        giantLaserLine.SetPosition(1, mousePos + (mousePos - new Vector2(transform.position.x, transform.position.y)).normalized * laserDist);
         EdgeCollider2D laserCollider = giantLaser.GetComponent<EdgeCollider2D>();
         laserCollider.enabled = true;
         List<Vector2> linePoints = new()
