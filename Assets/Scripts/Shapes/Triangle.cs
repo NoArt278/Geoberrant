@@ -48,7 +48,7 @@ public class Triangle : PowerShapes
 
         rb = GetComponent<Rigidbody2D>();
 
-        // Setup lasers
+        // Set up lasers
         lasers = new List<GameObject>();
         laserRenderers = new List<SpriteRenderer>();
         laserLines = new List<LineRenderer>();
@@ -62,7 +62,8 @@ public class Triangle : PowerShapes
             laserRender.color = laserGradient.Evaluate(1f);
             newLaserLine.startWidth = initialLaserWidth;
             newLaserLine.endWidth = initialLaserWidth;
-            newLaserLine.material.color = laserGradient.Evaluate(0.5f);
+            newLaserLine.startColor = laserGradient.Evaluate(0.5f);
+            newLaserLine.endColor = laserGradient.Evaluate(0.5f);
 
             lasers.Add(newLaser);
             laserRenderers.Add(laserRender);
@@ -134,8 +135,11 @@ public class Triangle : PowerShapes
             for (int i = 0; i < laserLines.Count; i++)
             {
                 laserRenderers[i].color = laserGradient.Evaluate(currDuration / laserFireTime);
+                laserLines[i].startColor = laserGradient.Evaluate((currDuration / 2) / laserFireTime);
+                laserLines[i].endColor = laserGradient.Evaluate((currDuration / 2) / laserFireTime);
             }
-            giantLaserLine.material.color = laserGradient.Evaluate(currDuration / laserFireTime);
+            giantLaserLine.startColor = laserGradient.Evaluate(currDuration / laserFireTime);
+            giantLaserLine.endColor = laserGradient.Evaluate(currDuration / laserFireTime);
             currDuration = Time.time - fireTime;
             yield return null;
         }
@@ -143,6 +147,8 @@ public class Triangle : PowerShapes
         {
             laserLines[i].startWidth = initialLaserWidth;
             laserLines[i].endWidth = initialLaserWidth;
+            laserLines[i].startColor = laserGradient.Evaluate(0.5f);
+            laserLines[i].endColor = laserGradient.Evaluate(0.5f);
         }
         laserCollider.enabled = false;
         Destroy(giantLaser);
