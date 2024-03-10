@@ -29,6 +29,7 @@ public class Star : PowerShapes
         SetMoveSpeed(35);
         SetScaleOffset(0.5f);
         SetGravScale(3);
+        SetDef(3);
         SetTangentMode(ShapeTangentMode.Linear);
         rb = GetComponent<Rigidbody2D>();
         SetBounciness(0.6f);

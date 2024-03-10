@@ -24,6 +24,7 @@ public class Square : PowerShapes
         SetScaleOffset(0.25f);
         SetBounciness(0);
         SetGravScale(3);
+        SetDef(Mathf.Infinity);
         SetTangentMode(ShapeTangentMode.Linear);
         SetColor(Color.gray);
     }

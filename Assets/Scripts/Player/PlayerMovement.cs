@@ -11,9 +11,9 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     Coroutine transformShape, triggerPower;
-    float rollSpeed, jumpHeight, moveSpeed;
+    float rollSpeed, jumpHeight, moveSpeed, hp, def;
     const float transformSpeed = 0.05f, playerScale = 2, powerCooldown=1.5f;
-    bool jumpAvailable;
+    bool jumpAvailable, isHurt;
     [SerializeField] List<PowerShapes> powerShapes;
     int currChosenShape;
     PolygonCollider2D polCollider;
@@ -34,6 +34,8 @@ public class PlayerMovement : MonoBehaviour
         colorGradient = new Gradient();
         colorKey = new GradientColorKey[2];
         alphaKey = new GradientAlphaKey[2];
+        hp = 100;
+        isHurt = false;
     }
     private void Start()
     {
@@ -109,10 +111,23 @@ public class PlayerMovement : MonoBehaviour
         float currInterval = Time.time - startTime;
         while (currInterval < powerCooldown)
         {
-            spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(currInterval / powerCooldown);
+            if (!isHurt)
+            {
+                spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(currInterval / powerCooldown);
+            }
             currInterval = Time.time - startTime;
             yield return null;
         }
+        colorGradient.Evaluate(1f);
+    }
+
+    IEnumerator Hurt()
+    {
+        Color prevColor = spriteShapeControl.spriteShapeRenderer.color;
+        spriteShapeControl.spriteShapeRenderer.color = Color.red;
+        yield return new WaitForSeconds(0.2f);
+        spriteShapeControl.spriteShapeRenderer.color = prevColor;
+        isHurt = false;
     }
 
     IEnumerator StartPower()
@@ -241,7 +256,16 @@ public class PlayerMovement : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.rotation.eulerAngles.z < 90)
+        if (collision.gameObject.CompareTag("Damage"))
+        {
+            if (!isHurt)
+            {
+                isHurt = true;
+                // hp -= collision.damage
+                StartCoroutine(Hurt());
+            }
+        }
+        else if (collision.transform.rotation.eulerAngles.z < 90)
         {
             jumpAvailable = true;
         }

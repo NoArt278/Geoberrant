@@ -8,6 +8,7 @@ public class Enemy : MonoBehaviour
     new BoxCollider2D collider;
     bool isDefeated, seePlayer;
     float moveSpeed;
+    Transform player;
     RaycastHit2D[] hitList;
     private void Awake()
     {
@@ -38,6 +39,10 @@ public class Enemy : MonoBehaviour
     {
         return rb;
     }
+    public Transform GetPlayer()
+    {
+        return player;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -66,6 +71,7 @@ public class Enemy : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     seePlayer = true;
+                    player = hit.transform;
                     break;
                 }
             }

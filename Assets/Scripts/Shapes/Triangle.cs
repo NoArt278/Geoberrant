@@ -31,6 +31,7 @@ public class Triangle : PowerShapes
         SetScaleOffset(0.4f);
         SetBounciness(0);
         SetGravScale(0.5f);
+        SetDef(1);
         SetTangentMode(ShapeTangentMode.Linear);
         SetColor(Color.green);
 

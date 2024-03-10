@@ -20,6 +20,7 @@ public class Octagon : PowerShapes
         SetMoveSpeed(25);
         SetScaleOffset(0.25f);
         SetBounciness(0);
+        SetDef(3);
         SetTangentMode(ShapeTangentMode.Continuous);
         SetGravScale(3);
         SetColor(Color.white);
