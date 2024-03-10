@@ -11,7 +11,8 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     Coroutine transformShape, triggerPower;
-    float rollSpeed, jumpHeight, moveSpeed, hp, def;
+    float rollSpeed, jumpHeight, moveSpeed, def;
+    public float hp;
     const float transformSpeed = 0.05f, playerScale = 2, powerCooldown=1.5f;
     bool jumpAvailable, isHurt;
     [SerializeField] List<PowerShapes> powerShapes;
@@ -49,6 +50,7 @@ public class PlayerMovement : MonoBehaviour
         rollSpeed = startShape.GetRollSpeed();
         jumpHeight = startShape.GetJumpHeight();
         moveSpeed = startShape.GetMoveSpeed();
+        def = startShape.GetDef();
         rb.mass = startShape.GetMass();
         rb.sharedMaterial.bounciness = startShape.GetBounciness();
 
@@ -183,6 +185,7 @@ public class PlayerMovement : MonoBehaviour
         rb.mass = chosenShape.GetMass();
         moveSpeed = chosenShape.GetMoveSpeed();
         jumpHeight = chosenShape.GetJumpHeight();
+        def = chosenShape.GetDef();
         rb.gravityScale = chosenShape.GetGravScale();
         rb.sharedMaterial.bounciness = chosenShape.GetBounciness();
 
@@ -254,18 +257,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("Damage"))
         {
             if (!isHurt)
             {
-                isHurt = true;
-                // hp -= collision.damage
-                StartCoroutine(Hurt());
+                float damage = collision.gameObject.GetComponent<Damage>().damage;
+                if (damage > def)
+                {
+                    isHurt = true;
+                    hp -= damage - def;
+                    StartCoroutine(Hurt());
+                }
             }
+            Destroy(collision.gameObject);
         }
-        else if (collision.transform.rotation.eulerAngles.z < 90)
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.rotation.eulerAngles.z < 90)
         {
             jumpAvailable = true;
         }
