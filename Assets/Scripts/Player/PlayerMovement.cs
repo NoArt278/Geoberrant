@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(1f);
 
         StartCoroutine(ReduceHP());
-        InvokeRepeating("FastenDepeleteHP", 30f, 30f);
+        InvokeRepeating("FastenDepeleteHP", 60, 60);
     }
 
     private void OnEnable()
