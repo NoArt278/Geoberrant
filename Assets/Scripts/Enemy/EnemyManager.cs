@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class EnemyManager : MonoBehaviour
 {
-    [SerializeField] GameObject scientist, guard;
-    [SerializeField] List<Transform> spawnPoints;
+    [SerializeField] GameObject scientist, guard, jetpack;
+    [SerializeField] Transform groundSpawnParent, airSpawnParent;
     float scientistSpawnThreshold, guardSpawnThreshold, spawnInterval;
     const int maxEnemyCount = 60;
     private void Awake()
@@ -14,14 +14,16 @@ public class EnemyManager : MonoBehaviour
         guardSpawnThreshold = 100;
         spawnInterval = 1;
         InvokeRepeating("SpawnEnemies", 2f, spawnInterval);
+        InvokeRepeating("SpawnJetpacks", 5f, 3f);
     }
 
     private void SpawnEnemies()
     {
         if (transform.childCount < maxEnemyCount)
         {
-            foreach (Transform t in spawnPoints)
+            for (int i=0; i<groundSpawnParent.childCount; i++)
             {
+                Transform t = groundSpawnParent.GetChild(i);
                 float res = Random.Range(0, 100);
                 if (res <= scientistSpawnThreshold)
                 {
@@ -31,6 +33,18 @@ public class EnemyManager : MonoBehaviour
                 {
                     Instantiate(guard, t.position, Quaternion.identity, transform);
                 }
+            }
+        }
+    }
+
+    private void SpawnJetpacks()
+    {
+        if (transform.childCount < maxEnemyCount)
+        {
+            for (int i = 0; i < airSpawnParent.childCount; i++)
+            {
+                Transform t = airSpawnParent.GetChild(i);
+                Instantiate(jetpack, t.position, Quaternion.identity, transform);
             }
         }
     }
