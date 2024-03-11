@@ -119,8 +119,8 @@ public class Triangle : PowerShapes
         GameObject giantLaser = Instantiate(laser, mousePos, Quaternion.identity);
         giantLaser.tag = "Laser";
         LineRenderer giantLaserLine = giantLaser.GetComponent<LineRenderer>();
-        giantLaserLine.startWidth = firedLaserWidth;
-        giantLaserLine.endWidth = firedLaserWidth;
+        giantLaserLine.startWidth = firedLaserWidth * 2;
+        giantLaserLine.endWidth = firedLaserWidth * 2;
         giantLaserLine.SetPosition(0, mousePos);
         giantLaserLine.SetPosition(1, mousePos + (mousePos - new Vector2(transform.position.x, transform.position.y)).normalized * laserDist);
         EdgeCollider2D laserCollider = giantLaser.GetComponent<EdgeCollider2D>();
@@ -130,7 +130,7 @@ public class Triangle : PowerShapes
             Vector2.zero, giantLaserLine.GetPosition(1) - new Vector3(mousePos.x, mousePos.y),
         };
         laserCollider.SetPoints(linePoints);
-        laserCollider.edgeRadius = 1;
+        laserCollider.edgeRadius = 2;
 
         while (currDuration < laserFireTime)
         {
