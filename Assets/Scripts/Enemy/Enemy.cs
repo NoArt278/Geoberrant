@@ -8,9 +8,10 @@ public class Enemy : MonoBehaviour
     new BoxCollider2D collider;
     bool isDefeated, seePlayer;
     SpriteRenderer spriteRenderer;
-    float moveSpeed;
+    float moveSpeed, pointWorth;
     Transform player;
     RaycastHit2D[] hitList;
+    GameManager gm;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -18,12 +19,18 @@ public class Enemy : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         isDefeated = false;
         seePlayer = false;
+        player = GameObject.FindGameObjectWithTag("Player").transform;
+        gm = GameObject.Find("GameManager").GetComponent<GameManager>();
     }
 
     // Getters and setters
     public void SetMoveSpeed(float speed)
     {
         moveSpeed = speed;
+    }
+    public void SetPointWorth(float pointWorth)
+    {
+        this.pointWorth = pointWorth;
     }
     public float GetMoveSpeed()
     {
@@ -36,6 +43,10 @@ public class Enemy : MonoBehaviour
     public bool GetSeePlayer()
     {
         return seePlayer;
+    }
+    public float GetPointWorth()
+    {
+        return pointWorth;
     }
     public Rigidbody2D GetRB()
     {
@@ -54,6 +65,8 @@ public class Enemy : MonoBehaviour
             collider.enabled = false;
             int collideDir = (collision.transform.position.x < transform.position.x) ? 1 : -1;
             rb.velocity = new Vector2(Random.Range(10,30) * collideDir, Random.Range(10,30));
+            player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2); // Heal player when killed
+            gm.AddScore(GetPointWorth()); // Add to score when killed
         }
     }
 
@@ -64,7 +77,9 @@ public class Enemy : MonoBehaviour
             isDefeated = true;
             spriteRenderer.color = Color.black;
             collider.enabled = false;
-            rb.velocity = (new Vector2(Random.Range(10, 30), Random.Range(10, 30)));
+            rb.velocity = (new Vector2(Random.Range(10, 30) * Mathf.Sign(Random.Range(-1,1)), Random.Range(10, 30)));
+            player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2);
+            gm.AddScore(GetPointWorth()); // Add to score when killed
         }
     }
 
@@ -86,7 +101,6 @@ public class Enemy : MonoBehaviour
                 if (hit.collider.CompareTag("Player"))
                 {
                     seePlayer = true;
-                    player = hit.transform;
                     break;
                 }
             }

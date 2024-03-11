@@ -8,6 +8,7 @@ public class Scientist : Enemy
     private void Start()
     {
         SetMoveSpeed(10f);
+        SetPointWorth(5);
         patrol = StartCoroutine(Patrol(Mathf.Sign(Random.Range(-1,1))));
     }
 
@@ -25,6 +26,10 @@ public class Scientist : Enemy
                 StopCoroutine(patrol);
                 patrol = null;
                 transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + 180) % 360, 0); // Turn around when see player
+            }
+            if (GetRB().velocity == Vector2.zero)
+            {
+                transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + 180) % 360, 0); // Turn around when stuck
             }
             GetRB().velocity = new Vector2((transform.rotation.eulerAngles.y != 0 ? -1 : 1) * GetMoveSpeed() * 2, 0);
         }

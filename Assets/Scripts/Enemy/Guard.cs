@@ -4,38 +4,24 @@ using UnityEngine;
 
 public class Guard : Enemy
 {
-    Coroutine patrol, shoot;
+    Coroutine shoot;
     [SerializeField] GameObject rifle, bullet;
     private void Start()
     {
         SetMoveSpeed(10f);
-        patrol = StartCoroutine(Patrol(Mathf.Sign(Random.Range(-1,1))));
+        SetPointWorth(10);
+        shoot = StartCoroutine(Shoot());
     }
 
     private void FixedUpdate()
     {
-        if (GetIsDefeated())
+        if (GetIsDefeated() && shoot!= null)
         {
-            if (patrol != null)
-            {
-                StopCoroutine(patrol);
-                patrol = null;
-            }
-            if (shoot != null)
-            {
-                StopCoroutine(shoot);
-                shoot = null;
-            }
+            StopCoroutine(shoot);
+            shoot = null;
         }
-        if (GetSeePlayer() && !GetIsDefeated())
+        if (!GetIsDefeated())
         {
-            if (patrol != null)
-            {
-                StopCoroutine(patrol);
-                patrol = null;
-                shoot = StartCoroutine(Shoot());
-            }
-
             // Face player and move toward player if distance is big
             Vector3 dir;
             float currYRotation = transform.rotation.eulerAngles.y;
@@ -79,27 +65,6 @@ public class Guard : Enemy
             {
                 Destroy(newBullet);
             }
-        }
-    }
-
-    IEnumerator Patrol(float startDir)
-    {
-        float dir = startDir;
-        if (dir < 0)
-        {
-            transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + 180) % 360, 0);
-        }
-        float prevChangeDirTime = Time.time;
-        while (true)
-        {
-            if (Time.time - prevChangeDirTime >= 3) // Flip direction every 3 seconds
-            {
-                transform.rotation = Quaternion.Euler(0, (transform.rotation.eulerAngles.y + 180) % 360, 0);
-                dir *= -1;
-                prevChangeDirTime = Time.time;
-            }
-            GetRB().velocity = new Vector2(dir * GetMoveSpeed(), 0);
-            yield return null;
         }
     }
 }

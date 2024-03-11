@@ -11,8 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     Coroutine transformShape, triggerPower;
-    float rollSpeed, jumpHeight, moveSpeed, def;
-    public float hp;
+    float rollSpeed, jumpHeight, moveSpeed, def, hp;
     const float transformSpeed = 0.05f, playerScale = 2, powerCooldown=1.5f;
     bool jumpAvailable, isHurt;
     [SerializeField] List<PowerShapes> powerShapes;
@@ -21,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
     Gradient colorGradient;
     GradientColorKey[] colorKey;
     GradientAlphaKey[] alphaKey;
+    [SerializeField] GameManager gm;
 
     void Awake()
     {
@@ -71,6 +71,8 @@ public class PlayerMovement : MonoBehaviour
 
         colorGradient.SetKeys(colorKey, alphaKey);
         spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(1f);
+
+        InvokeRepeating("ReduceHP", 0f, 0.5f);
     }
 
     private void OnEnable()
@@ -218,7 +220,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         Vector2 readMoveValue = move.ReadValue<Vector2>();
-        if (readMoveValue.x != 0 && triggerPower == null) // Can't move normally if power is active
+        if (readMoveValue.x != 0 && (triggerPower == null || rb.velocity.x == 0)) // Can't move normally if power is active except when stopped moving
         {
             rb.velocity = new Vector2(readMoveValue.x * moveSpeed, rb.velocity.y);
             rb.angularVelocity = readMoveValue.x * rollSpeed * -1;
@@ -272,6 +274,24 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
             Destroy(collision.gameObject);
+        }
+    }
+
+    public float GetHP()
+    {
+        return hp;
+    }
+
+    private void ReduceHP()
+    {
+        hp -= 3;
+    }
+
+    public void Heal(float amount)
+    {
+        if (hp < 100)
+        {
+            hp += amount;
         }
     }
 
