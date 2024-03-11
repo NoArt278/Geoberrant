@@ -52,7 +52,8 @@ public class Enemy : MonoBehaviour
         {
             isDefeated = true;
             collider.enabled = false;
-            rb.velocity = (new Vector2(Random.Range(10,30), Random.Range(10,30)));
+            int collideDir = (collision.transform.position.x < transform.position.x) ? 1 : -1;
+            rb.velocity = new Vector2(Random.Range(10,30) * collideDir, Random.Range(10,30));
         }
     }
 
