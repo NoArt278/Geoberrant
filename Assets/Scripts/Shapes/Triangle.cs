@@ -117,6 +117,7 @@ public class Triangle : PowerShapes
         }
         float currDuration = Time.time - fireTime;
         GameObject giantLaser = Instantiate(laser, mousePos, Quaternion.identity);
+        giantLaser.tag = "Laser";
         LineRenderer giantLaserLine = giantLaser.GetComponent<LineRenderer>();
         giantLaserLine.startWidth = firedLaserWidth;
         giantLaserLine.endWidth = firedLaserWidth;

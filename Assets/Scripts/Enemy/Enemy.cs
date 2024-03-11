@@ -50,15 +50,16 @@ public class Enemy : MonoBehaviour
         {
             isDefeated = true;
             collider.enabled = false;
-            rb.velocity = (collision.relativeVelocity + new Vector2(0, Random.Range(5,20))) * 15;
-            StartCoroutine(DestroySelf());
+            rb.velocity = (new Vector2(Random.Range(10,30), Random.Range(10,30)));
         }
     }
 
-    IEnumerator DestroySelf()
+    private void OnBecameInvisible()
     {
-        yield return new WaitForSeconds(2f);
-        Destroy(gameObject);
+        if (isDefeated)
+        {
+            Destroy(gameObject);
+        }
     }
 
     private void Update()
