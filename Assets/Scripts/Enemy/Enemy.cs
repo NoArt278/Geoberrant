@@ -14,6 +14,7 @@ public class Enemy : MonoBehaviour
     RaycastHit2D[] hitList;
     GameManager gm;
     AudioSource audioSource;
+    Coroutine reduceHitSound;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -81,7 +82,7 @@ public class Enemy : MonoBehaviour
             {
                 audioSource.Play();
                 gm.AddHitSoundCount();
-                StartCoroutine(HitSoundStopped());
+                reduceHitSound = StartCoroutine(HitSoundStopped());
             }
         }
     }
@@ -117,16 +118,14 @@ public class Enemy : MonoBehaviour
     {
         yield return new WaitForSeconds(audioSource.clip.length);
         gm.ReduceHitSoundCount();
+        reduceHitSound = null;
     }
 
     private void OnBecameInvisible()
     {
         if (isDefeated)
         {
-            if (audioSource.isPlaying)
-            {
-                gm.ReduceHitSoundCount();
-            }
+            gm.ReduceHitSoundCount();
             Destroy(gameObject);
         }
     }
