@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     Rigidbody2D rb;
     new BoxCollider2D collider;
     bool isDefeated, seePlayer;
+    SpriteRenderer spriteRenderer;
     float moveSpeed;
     Transform player;
     RaycastHit2D[] hitList;
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         collider = GetComponent<BoxCollider2D>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
         isDefeated = false;
         seePlayer = false;
     }
@@ -51,6 +53,17 @@ public class Enemy : MonoBehaviour
             isDefeated = true;
             collider.enabled = false;
             rb.velocity = (new Vector2(Random.Range(10,30), Random.Range(10,30)));
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Laser"))
+        {
+            isDefeated = true;
+            spriteRenderer.color = Color.black;
+            collider.enabled = false;
+            rb.velocity = (new Vector2(Random.Range(10, 30), Random.Range(10, 30)));
         }
     }
 
