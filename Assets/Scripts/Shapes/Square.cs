@@ -15,7 +15,7 @@ public class Square : PowerShapes
         SetPoints(new List<Vector2>
         {
             // Modify the vertices to change the shape of the sprite
-            new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1), new Vector2(-1, -1)
+            new Vector2(-1, -1), new Vector2(-1, 1), new Vector2(1, 1), new Vector2(1, -1),
         });
         SetMass(100);
         SetRollSpeed(200);

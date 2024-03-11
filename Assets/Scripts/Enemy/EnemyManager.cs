@@ -6,46 +6,74 @@ public class EnemyManager : MonoBehaviour
 {
     [SerializeField] GameObject scientist, guard, jetpack;
     [SerializeField] Transform groundSpawnParent, airSpawnParent;
-    float scientistSpawnThreshold, guardSpawnThreshold, spawnInterval;
+    float scientistSpawnThreshold, guardSpawnThreshold, groundSpawnInterval, airSpawnInterval;
     const int maxEnemyCount = 60;
     private void Awake()
     {
         scientistSpawnThreshold = 70;
         guardSpawnThreshold = 100;
-        spawnInterval = 1;
-        InvokeRepeating("SpawnEnemies", 2f, spawnInterval);
-        InvokeRepeating("SpawnJetpacks", 5f, 3f);
+        groundSpawnInterval = 1;
+        airSpawnInterval = 3;
+        StartCoroutine(SpawnEnemies());
+        StartCoroutine(SpawnJetpacks());
+        InvokeRepeating("ReduceSpawnIntervals", 30f, 30f);
     }
 
-    private void SpawnEnemies()
+    private void ReduceSpawnIntervals()
     {
-        if (transform.childCount < maxEnemyCount)
+        if (groundSpawnInterval > 0.1f)
         {
-            for (int i=0; i<groundSpawnParent.childCount; i++)
-            {
-                Transform t = groundSpawnParent.GetChild(i);
-                float res = Random.Range(0, 100);
-                if (res <= scientistSpawnThreshold)
-                {
-                    Instantiate(scientist, t.position, Quaternion.identity, transform);
-                }
-                else if (res <= guardSpawnThreshold)
-                {
-                    Instantiate(guard, t.position, Quaternion.identity, transform);
-                }
-            }
+            groundSpawnInterval -= 0.1f;
+        }
+        if (airSpawnInterval > 1.5f)
+        {
+            airSpawnInterval -= 0.5f;
+        }
+        if (scientistSpawnThreshold > 20)
+        {
+            scientistSpawnThreshold -= 10;
         }
     }
 
-    private void SpawnJetpacks()
+    IEnumerator SpawnEnemies()
     {
-        if (transform.childCount < maxEnemyCount)
+        yield return new WaitForSeconds(2f);
+        while (true)
         {
-            for (int i = 0; i < airSpawnParent.childCount; i++)
+            if (transform.childCount < maxEnemyCount)
             {
-                Transform t = airSpawnParent.GetChild(i);
-                Instantiate(jetpack, t.position, Quaternion.identity, transform);
+                for (int i = 0; i < groundSpawnParent.childCount; i++)
+                {
+                    Transform t = groundSpawnParent.GetChild(i);
+                    float res = Random.Range(0, 100);
+                    if (res <= scientistSpawnThreshold)
+                    {
+                        Instantiate(scientist, t.position, Quaternion.identity, transform);
+                    }
+                    else if (res <= guardSpawnThreshold)
+                    {
+                        Instantiate(guard, t.position, Quaternion.identity, transform);
+                    }
+                }
             }
+            yield return new WaitForSeconds(groundSpawnInterval);
+        }
+    }
+
+    IEnumerator SpawnJetpacks()
+    {
+        yield return new WaitForSeconds(5f);
+        while (true)
+        {
+            if (transform.childCount < maxEnemyCount)
+            {
+                for (int i = 0; i < airSpawnParent.childCount; i++)
+                {
+                    Transform t = airSpawnParent.GetChild(i);
+                    Instantiate(jetpack, t.position, Quaternion.identity, transform);
+                }
+            }
+            yield return new WaitForSeconds(airSpawnInterval);
         }
     }
 }

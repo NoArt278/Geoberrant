@@ -11,7 +11,7 @@ public class PlayerMovement : MonoBehaviour
     private SpriteShapeController spriteShapeControl;
     Rigidbody2D rb;
     Coroutine transformShape, triggerPower;
-    float rollSpeed, jumpHeight, moveSpeed, def, hp;
+    float rollSpeed, jumpHeight, moveSpeed, def, hp, reduceHPInterval;
     const float transformSpeed = 0.05f, playerScale = 2, powerCooldown=1.5f;
     bool jumpAvailable, isHurt;
     [SerializeField] List<PowerShapes> powerShapes;
@@ -37,6 +37,7 @@ public class PlayerMovement : MonoBehaviour
         alphaKey = new GradientAlphaKey[2];
         hp = 100;
         isHurt = false;
+        reduceHPInterval = 0.5f;
     }
     private void Start()
     {
@@ -72,7 +73,8 @@ public class PlayerMovement : MonoBehaviour
         colorGradient.SetKeys(colorKey, alphaKey);
         spriteShapeControl.spriteShapeRenderer.color = colorGradient.Evaluate(1f);
 
-        InvokeRepeating("ReduceHP", 0f, 0.5f);
+        StartCoroutine(ReduceHP());
+        InvokeRepeating("FastenDepeleteHP", 30f, 30f);
     }
 
     private void OnEnable()
@@ -235,7 +237,7 @@ public class PlayerMovement : MonoBehaviour
     {
         while (transform.localScale.y > 0)
         {
-            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f * Time.deltaTime, transform.localScale.z);
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.01f * Time.deltaTime, transform.localScale.z);
             spriteShapeControl.spriteShapeRenderer.color = Color.red;
             yield return null;
         }
@@ -307,9 +309,21 @@ public class PlayerMovement : MonoBehaviour
         return hp;
     }
 
-    private void ReduceHP()
+    private void FastenDepeleteHP()
     {
-        hp -= 3;
+        if (reduceHPInterval > 0.2f)
+        {
+            reduceHPInterval -= 0.1f;
+        }
+    }
+
+    IEnumerator ReduceHP()
+    {
+        while (true)
+        {
+            hp -= 3;
+            yield return new WaitForSeconds(reduceHPInterval);
+        }
     }
 
     public void Heal(float amount)

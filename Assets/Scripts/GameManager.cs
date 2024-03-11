@@ -61,6 +61,7 @@ public class GameManager : MonoBehaviour
     {
         hud.SetActive(false);
         pauseHud.SetActive(true);
+        pauseHud.GetComponent<PauseMenu>().UpdateVolume();
         Time.timeScale = 0;
     }
 
