@@ -40,11 +40,13 @@ public class Square : PowerShapes
     IEnumerator Slam()
     {
         StartCoroutine(StraightenRotation());
+        rb.freezeRotation = true;
         Vector2 dir = Camera.main.ScreenToWorldPoint(new Vector2(Mouse.current.position.x.value, Mouse.current.position.y.value)) - transform.position;
         rb.velocity += new Vector2(powerJumpRange * Mathf.Sign(dir.x), powerJumpHeight);
         yield return new WaitForSeconds(1.3f);
         rb.velocity += new Vector2(0, -powerJumpHeight * 2);
         power = null;
+        rb.freezeRotation = false;
     }
 
     IEnumerator StraightenRotation()
@@ -53,15 +55,6 @@ public class Square : PowerShapes
         {
             rb.rotation = Mathf.Lerp(rb.rotation, 0, 1);
             yield return null;
-        }
-        rb.freezeRotation = true;
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.collider.CompareTag("Floor"))
-        {
-            rb.freezeRotation = false;
         }
     }
 }

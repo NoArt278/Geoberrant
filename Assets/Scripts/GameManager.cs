@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] Text scoreText, gameOverScoreText, gameOverHighScoreText;
     [SerializeField] GameObject gameOverHud;
     float score, highScore;
+    int hitSoundCount;
 
     private void Awake()
     {
@@ -18,6 +19,7 @@ public class GameManager : MonoBehaviour
         score = 0;
         highScore = PlayerPrefs.GetFloat("Highscore", -1);
         scoreText.text = "Score : " + score;
+        hitSoundCount = 0;
     }
 
     private void Update()
@@ -29,6 +31,24 @@ public class GameManager : MonoBehaviour
     {
         score += points;
         scoreText.text = "Score : " + score;
+    }
+
+    public int GetHitSoundCount()
+    {
+        return hitSoundCount;
+    }
+
+    public void AddHitSoundCount()
+    {
+        hitSoundCount++;
+    }
+
+    public void ReduceHitSoundCount()
+    {
+        if (hitSoundCount > 0)
+        {
+            hitSoundCount--;
+        }
     }
 
     public void GameOver()

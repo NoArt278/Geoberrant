@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(AudioSource))]
 public class Enemy : MonoBehaviour
 {
     Rigidbody2D rb;
@@ -12,6 +13,7 @@ public class Enemy : MonoBehaviour
     Transform player;
     RaycastHit2D[] hitList;
     GameManager gm;
+    AudioSource audioSource;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -21,6 +23,7 @@ public class Enemy : MonoBehaviour
         seePlayer = false;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         gm = GameObject.Find("GameManager").GetComponent<GameManager>();
+        audioSource = gameObject.GetComponent<AudioSource>();
     }
 
     // Getters and setters
@@ -67,6 +70,12 @@ public class Enemy : MonoBehaviour
             rb.velocity = new Vector2(Random.Range(10,30) * collideDir, Random.Range(10,30));
             player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2); // Heal player when killed
             gm.AddScore(GetPointWorth()); // Add to score when killed
+            if (gm.GetHitSoundCount() < 3)
+            {
+                audioSource.Play();
+                gm.AddHitSoundCount();
+                StartCoroutine(HitSoundStopped());
+            }
         }
     }
 
@@ -80,13 +89,29 @@ public class Enemy : MonoBehaviour
             rb.velocity = (new Vector2(Random.Range(10, 30) * Mathf.Sign(Random.Range(-1,1)), Random.Range(10, 30)));
             player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2);
             gm.AddScore(GetPointWorth()); // Add to score when killed
+            if (gm.GetHitSoundCount() < 3)
+            {
+                audioSource.Play();
+                gm.AddHitSoundCount();
+                StartCoroutine(HitSoundStopped());
+            }
         }
+    }
+
+    IEnumerator HitSoundStopped()
+    {
+        yield return new WaitForSeconds(audioSource.clip.length);
+        gm.ReduceHitSoundCount();
     }
 
     private void OnBecameInvisible()
     {
         if (isDefeated)
         {
+            if (audioSource.isPlaying)
+            {
+                gm.ReduceHitSoundCount();
+            }
             Destroy(gameObject);
         }
     }
