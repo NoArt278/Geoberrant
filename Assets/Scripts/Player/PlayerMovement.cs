@@ -216,6 +216,31 @@ public class PlayerMovement : MonoBehaviour
             triangle.DeactivateLaser();
         }
     }
+    private void Update()
+    {
+        if (hp <= 0)
+        {
+            jump.performed -= Jump;
+            power.performed -= ChangeShape;
+            trigger.performed -= TriggerPower;
+            move.Disable();
+            jump.Disable();
+            power.Disable();
+            trigger.Disable();
+            StartCoroutine(Death());
+        }
+    }
+
+    IEnumerator Death()
+    {
+        while (transform.localScale.y > 0)
+        {
+            transform.localScale = new Vector3(transform.localScale.x, transform.localScale.y - 0.5f * Time.deltaTime, transform.localScale.z);
+            spriteShapeControl.spriteShapeRenderer.color = Color.red;
+            yield return null;
+        }
+        gm.GameOver();
+    }
 
     void FixedUpdate()
     {
