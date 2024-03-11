@@ -21,9 +21,6 @@ public class GameManager : MonoBehaviour
         hud.SetActive(true);
         score = 0;
         highScore = PlayerPrefs.GetFloat("Highscore", -1);
-        audioMixer.SetFloat("MasterVol", PlayerPrefs.GetFloat("MasterVol", Mathf.Log10(0.5f) * 20));
-        audioMixer.SetFloat("BGMVol", PlayerPrefs.GetFloat("BGMVol", Mathf.Log10(1f) * 20));
-        audioMixer.SetFloat("SFXVol", PlayerPrefs.GetFloat("SFXVol", Mathf.Log10(1f) * 20));
         scoreText.text = "Score : " + score;
         hitSoundCount = 0;
     }
