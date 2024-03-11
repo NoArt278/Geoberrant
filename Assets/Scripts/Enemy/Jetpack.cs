@@ -65,10 +65,6 @@ public class Jetpack : Enemy
             Rigidbody2D bulletRB = newBullet.GetComponent<Rigidbody2D>();
             bulletRB.velocity = newBullet.transform.right * 20f;
             yield return new WaitForSeconds(3f);
-            if (newBullet != null)
-            {
-                Destroy(newBullet);
-            }
         }
     }
 }

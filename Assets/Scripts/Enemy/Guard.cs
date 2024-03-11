@@ -59,12 +59,8 @@ public class Guard : Enemy
         {
             GameObject newBullet = Instantiate(bullet, rifle.transform.position, rifle.transform.rotation);
             Rigidbody2D bulletRB = newBullet.GetComponent<Rigidbody2D>();
-            bulletRB.velocity = newBullet.transform.right * 30f;
+            bulletRB.velocity = newBullet.transform.right * 50f;
             yield return new WaitForSeconds(3f);
-            if (newBullet != null)
-            {
-                Destroy(newBullet);
-            }
         }
     }
 }
