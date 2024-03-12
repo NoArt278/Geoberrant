@@ -7,16 +7,18 @@ using UnityEngine.UI;
 public class PauseMenu : MonoBehaviour
 {
     [SerializeField] AudioMixer audioMixer;
-    [SerializeField] Slider master, bgm, sfx;
+    [SerializeField] Slider master, bgm, sfx, coin;
 
     public void UpdateVolume()
     {
         audioMixer.GetFloat("MasterVol", out float masterVol);
         audioMixer.GetFloat("BGMVol", out float bgmVol);
         audioMixer.GetFloat("SFXVol", out float sfxVol);
+        audioMixer.GetFloat("CoinVol", out float coinVol);
         master.value = Mathf.Pow(10, masterVol / 20);
         bgm.value = Mathf.Pow(10, bgmVol / 20);
         sfx.value = Mathf.Pow(10, sfxVol / 20);
+        coin.value = Mathf.Pow(10, coinVol / 20);
     }
     public void SetMasterVol(float vol)
     {
@@ -33,5 +35,11 @@ public class PauseMenu : MonoBehaviour
     {
         audioMixer.SetFloat("SFXVol", Mathf.Log10(vol) * 20);
         PlayerPrefs.SetFloat("SFXVol", Mathf.Log10(vol) * 20);
+    }
+
+    public void SetCoinVol(float vol)
+    {
+        audioMixer.SetFloat("CoinVol", Mathf.Log10(vol) * 20);
+        PlayerPrefs.SetFloat("CoinVol", Mathf.Log10(vol) * 20);
     }
 }

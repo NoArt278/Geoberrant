@@ -13,6 +13,7 @@ public class PlayerStart : MonoBehaviour
     {
         spriteShapeControl = GetComponent<SpriteShapeController>();
         rt = GetComponent<RectTransform>();
+        Time.timeScale = 1;
     }
 
     private void Start()
