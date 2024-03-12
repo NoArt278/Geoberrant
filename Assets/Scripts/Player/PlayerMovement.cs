@@ -225,6 +225,8 @@ public class PlayerMovement : MonoBehaviour
     {
         if (hp <= 0)
         {
+            Triangle triangle = (Triangle)powerShapes[2];
+            triangle.DeactivateLaser();
             jump.performed -= Jump;
             power.performed -= ChangeShape;
             trigger.performed -= TriggerPower;
