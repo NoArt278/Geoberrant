@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 5770996170669152445}
   - component: {fileID: 5770996170669152442}
   - component: {fileID: 3346087745933508645}
+  - component: {fileID: -6896084011652212188}
   m_Layer: 6
   m_Name: Scientist
   m_TagString: Enemy
@@ -243,3 +244,33 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-6896084011652212188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5770996170669152417}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 0
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000
+  m_ShapePath:
+  - {x: -1.04, y: -1.04, z: 0}
+  - {x: -1.04, y: 1.04, z: 0}
+  - {x: 1.0400009, y: 1.04, z: 0}
+  - {x: 1.0400009, y: -1.04, z: 0}
+  m_ShapePathHash: 0
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -97078
+  m_LocalBounds:
+    m_Center: {x: 0.00000047683716, y: 0, z: 0}
+    m_Extent: {x: 1.0400004, y: 1.04, z: 0}
