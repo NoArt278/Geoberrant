@@ -22,6 +22,7 @@ public class PlayerMovement : MonoBehaviour
     GradientColorKey[] colorKey;
     GradientAlphaKey[] alphaKey;
     [SerializeField] GameManager gm;
+    [SerializeField] AudioSource transformSound;
 
     void Awake()
     {
@@ -158,6 +159,7 @@ public class PlayerMovement : MonoBehaviour
         colorKey[1] = new GradientColorKey(chosenShape.GetColor(), 1.0f);
         colorGradient.SetKeys(colorKey, alphaKey);
         StartCoroutine(StartGradient());
+        transformSound.Play();
         transformShape = StartCoroutine(TransformShape(chosenShape));
     }
 

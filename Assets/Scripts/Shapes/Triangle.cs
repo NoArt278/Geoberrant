@@ -16,6 +16,7 @@ public class Triangle : PowerShapes
     GradientColorKey[] colorKey;
     GradientAlphaKey[] alphaKey;
     Vector2 mousePos;
+    [SerializeField] AudioSource laserSound;
     public void Awake()
     {
         SetPoints(new List<Vector2>
@@ -103,6 +104,7 @@ public class Triangle : PowerShapes
     public override void ActivatePower()
     {
         StartCoroutine(FireLaser());
+        laserSound.Play();
         Vector2 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
         rb.velocity = (new Vector2(transform.position.x, transform.position.y) - mousePos).normalized * recoil;
     }

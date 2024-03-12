@@ -70,15 +70,16 @@ public class Enemy : MonoBehaviour
             rb.velocity = new Vector2(Random.Range(10,30) * collideDir, Random.Range(10,30));
             player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2); // Heal player when killed
             gm.AddScore(GetPointWorth()); // Add to score when killed
-            if (gm.GetHitSoundCount() > 0)
-            {
-                audioSource.volume = 0.15f;
-            } else
-            {
-                audioSource.volume = 0.3f;
-            }
             if (gm.GetHitSoundCount() < 5)
             {
+                if (gm.GetHitSoundCount() > 0)
+                {
+                    audioSource.volume = 0.5f;
+                }
+                else
+                {
+                    audioSource.volume = 0.3f;
+                }
                 audioSource.Play();
                 gm.AddHitSoundCount();
                 StartCoroutine(HitSoundStopped());
@@ -97,16 +98,16 @@ public class Enemy : MonoBehaviour
             rb.velocity = (new Vector2(Random.Range(10, 30) * Mathf.Sign(Random.Range(-1,1)), Random.Range(10, 30)));
             player.GetComponent<PlayerMovement>().Heal(GetPointWorth() / 2);
             gm.AddScore(GetPointWorth()); // Add to score when killed
-            if (gm.GetHitSoundCount() > 0 && gm.GetHitSoundCount() < 3)
-            {
-                audioSource.volume = 0.15f;
-            }
-            else
-            {
-                audioSource.volume = 0.3f;
-            }
             if (gm.GetHitSoundCount() < 5)
             {
+                if (gm.GetHitSoundCount() > 0 && gm.GetHitSoundCount() < 3)
+                {
+                    audioSource.volume = 0.5f;
+                }
+                else
+                {
+                    audioSource.volume = 0.3f;
+                }
                 audioSource.Play();
                 gm.AddHitSoundCount();
                 StartCoroutine(HitSoundStopped());
